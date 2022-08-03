@@ -7,6 +7,9 @@ eventlisteners()
 // form submission
 function eventlisteners(){
     document.querySelector('#form').addEventListener('submit', newNote)
+
+    // Remove note
+    document.querySelector('#note-list').addEventListener('click',removeNote)
 }
 
 
@@ -34,4 +37,9 @@ function newNote(e){
 
     // adding li to the note-list
     noteList.appendChild(li)
+}
+function removeNote(e) {
+    if (e.target.classList.contains('remove-note')) {
+        e.target.parentElement.remove()
+    } 
 }
