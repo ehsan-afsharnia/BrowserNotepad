@@ -10,6 +10,9 @@ function eventlisteners(){
 
     // Remove note
     document.querySelector('#note-list').addEventListener('click',removeNote)
+
+    //Get data from localstorage on loaded
+    document.addEventListener('DOMContentLoaded', localStorageOnLoad)
 }
 
 
@@ -38,7 +41,10 @@ function newNote(e){
     // adding li to the note-list
     noteList.appendChild(li)
 
+    this.reset()
+
     addNoteToLocalStorage(note)
+    alert("يادداشت شما با موفقیت اضافه شد")
 }
 
 
@@ -47,6 +53,9 @@ function removeNote(e) {
     if (e.target.classList.contains('remove-note')) {
         e.target.parentElement.remove()
     } 
+
+    //Also remove note from localstorage
+    removeNoteLocalStorage(e.target.parentElement.textContent)
 }
 
 // Adding note to the local storage
@@ -81,4 +90,54 @@ function getNotesFromLocalStorage() {
         notes = JSON.parse(getFromLs)
     }
     return notes
+}
+
+//Get data from loacalstorage on load
+function localStorageOnLoad() {
+    const notes = getNotesFromLocalStorage()
+notes.forEach(function(note) {
+        const removeBtn = document.createElement('a')
+        removeBtn.textContent = 'X'
+        removeBtn.classList = 'remove-note'
+        
+
+        console.log(removeBtn)
+        // create <li> tag
+        const li = document.createElement('li')
+        li.appendChild(document.createTextNode(note))
+
+        // adding remove btn to the li
+        li.appendChild(removeBtn)
+
+        // adding li to the note-list
+        noteList.appendChild(li)
+
+        
+
+});}
+
+//Also remove note from localstorage 
+function removeNoteLocalStorage(noteContent){
+   
+   //Delete X form the content
+    const noteDelete = noteContent.substring(0, noteContent.length-1)
+
+    // Get notes from localstorage
+
+    const notesFromLS = getNotesFromLocalStorage()
+
+    notesFromLS.forEach(function (note, index) {
+        
+        if (note === noteDelete) {
+            notesFromLS.splice(index, 1)
+        }
+
+        // Set new array of notes to the localstorage
+
+        localStorage.setItem('notes', JSON.stringify(notesFromLS))
+
+    });
+
+
+
 }
